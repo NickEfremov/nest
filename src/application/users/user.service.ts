@@ -6,6 +6,9 @@ import { CreateUserDto } from '@app/application/users/dto/createUser.dto'
 import { sign } from 'jsonwebtoken';
 import { SECRET_JWT } from '@app/env';
 import { UserResponseInterface } from './types/userResponse.interface';
+import { LoginUserDto } from './dto/loginUser.dto';
+import { hash } from 'bcrypt';
+
 
 @Injectable()
 export class UserService {
@@ -54,5 +57,22 @@ export class UserService {
         token: this.generateJWT(user)
       }
     }
+  }
+
+  async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {  
+    const user = await this.userRepository.findOne({ 
+      where : {
+       email: loginUserDto.email
+      }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        'User no found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return  user;
   }
 }

@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
+import { Column } from "typeorm";
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -12,6 +13,7 @@ export class CreateUserDto {
     
     @IsNotEmpty()
     @IsEmail()
+    @Column({unique: true})
     readonly email: string;
 
     @IsNotEmpty()
